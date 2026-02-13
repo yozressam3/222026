@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>For ShoShoo ❤️</title>
+
+<style>
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  height: 100vh;
+  background: linear-gradient(135deg, #ffafbd, #ffc3a0);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: 'Segoe UI', sans-serif;
+  overflow: hidden;
+}
+
+/* SCENES */
+.scene {
+  position: absolute;
+  width: 100%;
+  text-align: center;
+  opacity: 0;
+  transform: translateY(20px) scale(0.95);
+  transition: all 1s ease;
+  pointer-events: none;
+}
+
+.scene.active {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+  pointer-events: auto;
+}
+
+.card {
+  background: white;
+  padding: 45px;
+  border-radius: 25px;
+  box-shadow: 0 25px 60px rgba(0,0,0,0.25);
+  display: inline-block;
+}
+
+button {
+  padding: 14px 36px;
+  font-size: 18px;
+  border: none;
+  border-radius: 14px;
+  cursor: pointer;
+  transition: 0.3s ease;
+}
+
+/* SCENE 1 */
+#startBtn {
+  background: #ff4d6d;
+  color: white;
+  margin-top: 25px;
+}
+
+/* SCENE 2 */
+#yes {
+  background: #ff4d6d;
+  color: white;
+  margin-right: 20px;
+}
+
+#no {
+  background: #ddd;
+  position: absolute;
+}
+
+/* SCENE 3 */
+#scene3 {
+  font-size: 24px;
+  color: #ff4d6d;
+}
+
+/* TYPEWRITER */
+.type {
+  border-right: 3px solid #ff4d6d;
+  white-space: nowrap;
+  overflow: hidden;
+  animation: blink 1s infinite;
+}
+
+@keyframes blink {
+  50% { border-color: transparent; }
+}
+
+/* HEARTS */
+.heart {
+  position: absolute;
+  font-size: 20px;
+  animation: float 4s linear infinite;
+  opacity: 0.7;
+}
+
+@keyframes float {
+  0% { transform: translateY(0); opacity: 1; }
+  100% { transform: translateY(-800px); opacity: 0; }
+}
+
+/* CONFETTI */
+.confetti {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  background: red;
+  animation: fall 3s linear forwards;
+}
+
+@keyframes fall {
+  to {
+    transform: translateY(800px) rotate(720deg);
+    opacity: 0;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<!-- SOUND -->
+<audio id="clickSound" src="https://assets.mixkit.co/sfx/preview/mixkit-click-error-1110.mp3"></audio>
+
+<!-- SCENE 1 -->
+<div class="scene active" id="scene1">
+  <div class="card">
+    <h1 class="type" id="typeText"></h1>
+    <p>So.... I've made u a little thing</p>
+    <p>Click here Ya Mesh Mesh 👇</p>
+    <button id="startBtn">Click here ✨</button>
+  </div>
+</div>
+
+<!-- SCENE 2 -->
+<div class="scene" id="scene2">
+  <div class="card">
+    <h1>Will you be my Valentine? 💘</h1>
+    <button id="yes">Yes 💕</button>
+    <button id="no">No 🙃</button>
+  </div>
+</div>
+
+<!-- SCENE 3 -->
+<div class="scene" id="scene3">
+  <div class="card">
+    You just made my heart the happiest ❤️  
+    <br><br>
+    much love ya shosho 🌹
+  </div>
+</div>
+
+<script>
+/* TYPEWRITER */
+const text = "Hey Babe 💖";
+let i = 0;
+const typeText = document.getElementById("typeText");
+
+function typeWriter() {
+  if (i < text.length) {
+    typeText.textContent += text.charAt(i);
+    i++;
+    setTimeout(typeWriter, 120);
+  }
+}
+typeWriter();
+
+/* SCENES */
+const scene1 = document.getElementById("scene1");
+const scene2 = document.getElementById("scene2");
+const scene3 = document.getElementById("scene3");
+const startBtn = document.getElementById("startBtn");
+const yesBtn = document.getElementById("yes");
+const noBtn = document.getElementById("no");
+const sound = document.getElementById("clickSound");
+
+startBtn.onclick = () => {
+  sound.play();
+  scene1.classList.remove("active");
+  setTimeout(() => scene2.classList.add("active"), 600);
+};
+
+/* NO BUTTON */
+const noTexts = [
+  "Are you sure?",
+  "Think about it 🤔",
+  "Don't break my heart! 💔",
+  "Really? Look at me! 🥺",
+  "Last chance! Babe",
+  "Okay, I'll disappear..."
+];
+
+let noIndex = 0;
+let yesScale = 1;
+
+noBtn.addEventListener("mouseover", () => {
+  sound.play();
+
+  if (noIndex < noTexts.length) {
+    noBtn.textContent = noTexts[noIndex];
+    noIndex++;
+  }
+
+  if (noIndex === noTexts.length) {
+    noBtn.style.opacity = "0";
+    noBtn.style.pointerEvents = "none";
+    return;
+  }
+
+  noBtn.style.left = Math.random() * 80 + "vw";
+  noBtn.style.top = Math.random() * 60 + "vh";
+
+  yesScale += 0.1;
+  yesBtn.style.transform = `scale(${yesScale})`;
+});
+
+/* YES */
+yesBtn.onclick = () => {
+  sound.play();
+  scene2.classList.remove("active");
+  setTimeout(() => scene3.classList.add("active"), 600);
+  confetti();
+};
+
+/* HEARTS */
+setInterval(() => {
+  const heart = document.createElement("div");
+  heart.className = "heart";
+  heart.textContent = "❤️";
+  heart.style.left = Math.random() * 100 + "vw";
+  heart.style.bottom = "0";
+  heart.style.fontSize = Math.random() * 20 + 15 + "px";
+  document.body.appendChild(heart);
+  setTimeout(() => heart.remove(), 4000);
+}, 300);
+
+/* CONFETTI */
+function confetti() {
+  for (let i = 0; i < 80; i++) {
+    const c = document.createElement("div");
+    c.className = "confetti";
+    c.style.left = Math.random() * 100 + "vw";
+    c.style.background = `hsl(${Math.random() * 360},100%,60%)`;
+    c.style.animationDuration = Math.random() * 2 + 2 + "s";
+    document.body.appendChild(c);
+    setTimeout(() => c.remove(), 3000);
+  }
+}
+</script>
+
+</body>
+</html>
